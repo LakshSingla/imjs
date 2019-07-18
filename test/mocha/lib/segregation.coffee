@@ -1,4 +1,5 @@
 ENV_VAR = 'IMJS_TESTS'
+SEGREGATE = 'SEGREGATE'
 
 TRIGGER_UNIT = 'UNIT'
 TRIGGER_INTEGRATION = 'INTEGRATION'
@@ -6,14 +7,20 @@ TRIGGER_INTEGRATION = 'INTEGRATION'
 
 # Developer needs to explicitly mention if he wants to run unit tests
 unitTests = ->
-    process.env[ENV_VAR] is TRIGGER_UNIT
+    if process.env[SEGREGATE] is "TRUE"
+        return process.env[ENV_VAR] is TRIGGER_UNIT
+    
+    return true
 
 # As integration tests should be the default behaviour,
 # if the user doesn't want to run unit tests explicitly,
 # run the integration tests (current case)
 # (Change this behaviour in case the build changes)
 integrationTests = ->
-    not unitTests()
+    if process.env[SEGREGATE] is "TRUE"
+        not unitTests()
+
+    return true
 
 # Defined just to keep consistency, both tests implies those which
 # can be used as both unit and integration tests

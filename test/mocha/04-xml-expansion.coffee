@@ -2,6 +2,7 @@ Fixture = require './lib/fixture'
 {eventually, prepare} = require './lib/utils'
 {unitTests} = require './lib/segregation'
 {setupBundle} = require './lib/mock'
+{startUpdater, stopUpdater} = require './lib/mockUpdater'
 
 nock = require 'nock'
 fs = require 'fs'
@@ -9,7 +10,11 @@ fs = require 'fs'
 # To expand the '*' is handled by `imjs` library, therefore unit test (expandStar)
 unitTests() && describe 'Query', ->
 
+  startUpdater '04-xml-expansion.1.json'
   setupBundle '04-xml-expansion.1.json'
+  
+  @afterAll ->
+    stopUpdater '04-xml-expansion.1.json'
 
   describe 'expandStar', ->
 
